@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -o errtrace -o nounset -o pipefail
+
+main() {
+	local -i exitCode=0
+	local hasMisspell=0
+
+	cd "${PROJECT_ROOT:?}"
+
+	echo "Conform stage."
+	cp tools/cfg/conform.yaml .conform.yaml
+	conform enforce || exitCode=$?
+	rm .conform.yaml
+	if [[ $exitCode == 0 ]]; then
+		echo "Conform stage complete."
+	fi
+
+	echo "cSpell check commit."
+	git log -1 --summary --format='%D%+B' >/tmp/commit.txt
+	cspell --config tools/cfg/cspell.json --root /tmp commit.txt || {
+		exitCode=$?
+		hasMisspell=1
+	}
+	if [[ $exitCode == 0 ]]; then
+		echo "cSpell check commit complete."
+	elif ((hasMisspell)); then
+		cspell check --config tools/cfg/cspell.json /tmp/commit.txt || exitCode=$?
+	fi
+	rm /tmp/commit.txt
+
+	exit "$exitCode"
+}
+
+main

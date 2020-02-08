@@ -1,0 +1,8 @@
+/tools/cache/
+/tools/log/
+
+# Python
+__pycache__/
+
+# pdoc3 auto-generated docs
+/public/

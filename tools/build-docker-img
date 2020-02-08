@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -o errtrace -o nounset -o pipefail
+
+main() {
+	cd "${PROJECT_ROOT:?}"
+
+	mkdir -p tools/{cache,log}
+	nix-build -o tools/cache/result tools/cfg/nix/docker.nix |& tee tools/log/docker-build.log
+	docker load -i tools/cache/result
+}
+
+main

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -o errtrace -o nounset -o pipefail
+
+main() {
+	cd "${PROJECT_ROOT:?}"
+
+	rm -rf public
+	pdoc --html --template-dir tools/cfg/pdoc3 -o public hublabbot
+	mv public/hublabbot/* public/
+	rm -r public/hublabbot
+}
+
+main

@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -o errtrace -o nounset -o pipefail
+
+main() {
+	local -i exitCode=0
+
+	cd "${PROJECT_ROOT:?}"
+
+	echo "Mypy stage."
+	mypy -m setup -p hublabbot || exitCode=$?
+	if [[ $exitCode == 0 ]]; then
+		echo "Mypy stage complete."
+	fi
+
+	echo "Jscpd stage."
+	jscpd --config tools/cfg/jscpd.json \
+		"$PWD/hublabbot" \
+		"$PWD/tools" || exitCode=$?
+	if [[ $exitCode == 0 ]]; then
+		echo "Jscpd stage complete."
+	fi
+
+	exit "$exitCode"
+}
+
+main

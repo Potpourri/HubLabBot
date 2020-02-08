@@ -1,0 +1,25 @@
+policies:
+  - type: commit
+    spec:
+      headerLength: 70
+      dco: false
+      gpg: false
+      imperative: true
+      maximumOfOneCommit: true
+      requireCommitBody: false
+      conventional:
+        types:
+          - build
+          - ci
+          - chore
+          - docs
+          - perf
+          - refactor
+          - revert
+          - style
+          - test
+        scopes:
+          - hublabbot
+          - github
+          - gitlab
+          - gitlab-userscript

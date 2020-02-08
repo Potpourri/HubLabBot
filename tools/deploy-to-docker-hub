@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -o errtrace -o nounset -o pipefail
+
+main() {
+	cd "${PROJECT_ROOT:?}"
+
+	docker tag potpourri/hublabbot:dev "potpourri/hublabbot:${HUBLABBOT_VERSION:?}"
+	docker tag potpourri/hublabbot:dev potpourri/hublabbot:latest
+	docker push "potpourri/hublabbot:$HUBLABBOT_VERSION"
+	docker push potpourri/hublabbot:latest
+}
+
+main

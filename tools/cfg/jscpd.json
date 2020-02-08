@@ -1,0 +1,14 @@
+{
+	"minLines": 3,
+	"minTokens": 50,
+	"threshold": 0,
+	"reporters": ["consoleFull"],
+	"absolute": true,
+	"gitignore": true,
+	"ignore": ["**/tools/cache", "**/tools/log", "**/__pycache__"],
+	"format": ["python", "bash"],
+	"formatsExts": {
+		"python": ["py", "pyi"],
+		"bash": ["", "bash", "sh"]
+	}
+}

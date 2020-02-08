@@ -1,0 +1,43 @@
+#+STARTUP: showall
+* HubLabBot
+
+[[https://builtwithnix.org][https://builtwithnix.org/badge.svg]]
+
+GitHub <-> GitLab integration supporter, interactive bot.
+
+GitLab has a [[https://about.gitlab.com/solutions/github/][GitLab CI/CD for GitHub]], but it lacks some functionality, this bot fixes it.
+
+** Features
+
+- =gh_auto_merge_pr=
+Merge Pull Request if GitLab CI passed, no conflicts found,
+has required label and author in white list.\\
+Suboptions: =authors_white_list=, =delay= (default: =60= sec),
+=required_label= (default: =auto-merge=).
+
+- =gh_show_gitlab_ci_fail=
+Post comment with GitLab CI fail-report in PR's thread.\\
+Suboptions: =max_lines= (default: =25=).
+
+- =gh_gitlab_ci_for_external_pr=
+Enable GitLab CI for external Pull Requests.
+
+- =gl_auto_cancel_pipelines=
+Cancel all prevarious Pipelines with the same commit, if started new one.
+
+- =gl_auto_delete_branches=
+Delete branch in GitLab when she deleted in GitHub.
+
+- =gl_delete_pipeline_btn=
+With [[./userscript/gitlab_delete_pipeline_button.user.js][userscript]] add delete buttons on Pipelines list page in [[https://gitlab.com][gitlab.com]].
+
+** Settings
+
+Settings stores in JSON file and environ variables. Path to settings file passes by first positional
+argument, default is =./hublabbot.json=.
+
+** License
+
+[[./LICENSE][MIT]]
+
+Except [[./hublabbot/assets/favicon.png][favicon.png]] from [[https://github.com/googlefonts/noto-emoji][Google Note Emoji]], their [[https://github.com/googlefonts/noto-emoji#license][license Apache 2.0]].

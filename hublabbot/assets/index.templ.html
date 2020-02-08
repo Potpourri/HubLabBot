@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>$github_bot_name</title>
+		<link rel="icon" href="/favicon.png" />
+		<style>
+			.main {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				padding: 2em;
+			}
+
+			.card {
+				box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+				transition: 0.3s;
+			}
+			.container {
+				padding: 2px 16px;
+			}
+
+			.speech-bubble {
+				position: relative;
+				background: #89dee5;
+				border-radius: 0.4em;
+				margin-left: 24px;
+				padding: 1em;
+			}
+			.speech-bubble:after {
+				content: '';
+				position: absolute;
+				left: 0;
+				top: 50%;
+				width: 0;
+				height: 0;
+				border: 24px solid transparent;
+				border-right-color: #89dee5;
+				border-left: 0;
+				border-top: 0;
+				margin-top: -12px;
+				margin-left: -24px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="main">
+			<div class="card">
+				<img src="$github_bot_avatar" alt="Avatar" style="width:256px">
+				<div class="container">
+					<a href="$github_bot_profile">
+						<h3><b>$github_bot_name</b></h3>
+					</a>
+					<small><i>Version: $github_bot_version</i></small>
+				</div>
+			</div>
+			<div class="speech-bubble">
+				Hi! I'm a GitHub <-> GitLab integration supporter, interactive bot.<br>
+				See more here:
+				<a href="https://github.com/Potpourri/HubLabBot">github.com/Potpourri/HubLabBot</a>
+			</div>
+		</div>
+	</body>
+</html>

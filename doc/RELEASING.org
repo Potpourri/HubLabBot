@@ -1,0 +1,22 @@
+#+STARTUP: showall
+* Releasing
+
+** HubLabBot
+
+		1. Bump =version= in [[../tools/cfg/nix/default.nix][default.nix]].
+
+		2. Commit with message: 'chore(hublabbot): Bump to <new_version>'
+
+		3. Add git tag to commit as '<new_version>'.
+
+		4. Push commit and tag to GitHub.
+
+		5. Rebuild Lorri shell: =lorri watch --shell-file tools/cfg/nix/shell.nix=.
+
+		6. Build Docker image: =build-docker-img=.
+
+		7. Login to Docker Hub: =docker login --user=potpourri=.
+
+		8. Deploy to Docker Hub: =deploy-to-docker-hub=.
+
+		9. Bump version in [[https://github.com/Potpourri/dotfiles/blob/master/nixos/nixpkgs/pkgs/hublabbot/default.nix][nix overlay]], then commit & push back.

@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -o errtrace -o nounset -o pipefail
+
+main() {
+	local -i exitCode=0
+
+	cd "${PROJECT_ROOT:?}"
+
+	echo "Flake8 stage."
+	flake8 --count || exitCode=$?
+	if [[ $exitCode == 0 ]]; then
+		echo "Flake8 stage complete."
+	fi
+
+	echo "cSpell stage."
+	find tools -maxdepth 1 -type f -exec \
+		cspell --config tools/cfg/cspell.json README.org hublabbot {} + || exitCode=$?
+	if [[ $exitCode == 0 ]]; then
+		echo "cSpell stage complete."
+	fi
+
+	exit "$exitCode"
+}
+
+main

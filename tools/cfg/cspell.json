@@ -1,0 +1,84 @@
+{
+	"version": "0.1",
+	"language": "en",
+	"overrides": [
+		{
+			"filename": "**/tools/*",
+			"languageId": "shellscript"
+		}
+	],
+	"allowCompoundWords": true,
+	"words": [
+		// bash keywords\builtins, coreutils\findutils and other GNU tools:
+		"alnum",
+		"elif",
+		"esac",
+		"eval",
+		"funcname",
+		"gnupg",
+		"gpgtar",
+		"mkdir",
+		"printf",
+		"rsync",
+		"xargs",
+		"xtrace",
+		// bash packages:
+		"emojify",
+		"hyperborea",
+		"jsonpath",
+		"shlib",
+		// peeple names:
+		"belyakov",
+		"mclarkson",
+		"mrowa", // mrowa44
+		// system packages:
+		"acodec",
+		"alsa",
+		"apcupsd",
+		"asound",
+		"cmos",
+		"emms",
+		"exwm",
+		"ffmpeg",
+		"fusermount",
+		"gtkrc",
+		"libmp", // libmp3lame
+		"marcfs",
+		"nixos",
+		"nixpkgs",
+		"nvram",
+		"passff",
+		"rclone",
+		"systemctl",
+		"udiskie",
+		"vcodec",
+		// develop tools:
+		"envrc",
+		"jscpd",
+		"lorri",
+		"shellcheckrc",
+		"shfmt",
+		"mypy",
+		"pdoc", // pdoc3
+		"gitlabci",
+		// python packages:
+		"pygit", // pygit2
+		// real words:
+		"interruptible",
+		"unmounting",
+		"unshift",
+		"untracked",
+		"favicon",
+		// my abbrevs:
+		"bashfnx",
+		"deps",
+		"deref",
+		"fullderef",
+		"fullhd",
+		"gdrive",
+		"mailrucloud",
+		"meganz",
+		"yadisk",
+		"templ"
+	]
+}
