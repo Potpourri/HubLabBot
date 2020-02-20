@@ -1,0 +1,34 @@
+image: registry.gitlab.com/potpourri1/hublabbot
+
+stages:
+  - commit-lint
+  - style-lint
+  - static-analysis
+  - deploy-docs
+
+commit-lint:
+  stage: commit-lint
+  interruptible: true
+  script:
+    - git fetch origin master:master --depth 50
+    - commit-lint
+
+style-lint:
+  stage: style-lint
+  interruptible: true
+  script: style-lint
+
+static-analysis:
+  stage: static-analysis
+  interruptible: true
+  script: static-analysis
+
+pages:
+  stage: deploy-docs
+  interruptible: true
+  script: build-docs
+  artifacts:
+    paths:
+    - public
+  only:
+    - master
