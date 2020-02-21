@@ -1,7 +1,7 @@
 #+STARTUP: showall
 * HubLabBot
 
-[[https://builtwithnix.org][https://builtwithnix.org/badge.svg]]
+[[https://builtwithnix.org][https://builtwithnix.org/badge.svg]] [[https://gitlab.com/Potpourri1/HubLabBot/-/commits/master][https://gitlab.com/Potpourri1/HubLabBot/badges/master/pipeline.svg]] [[https://hub.docker.com/r/potpourri/hublabbot][|Docker Hub|]] [[https://potpourri1.gitlab.io/HubLabBot/index.html][|Documentation|]]
 
 GitHub <-> GitLab integration supporter, interactive bot.
 
@@ -12,8 +12,8 @@ GitLab has a [[https://about.gitlab.com/solutions/github/][GitLab CI/CD for GitH
 - =gh_auto_merge_pr=
 Merge Pull Request if GitLab CI passed, no conflicts found,
 has required label and author in white list.\\
-Suboptions: =authors_white_list=, =delay= (default: =60= sec),
-=required_label= (default: =auto-merge=).
+Suboptions: =authors_white_list= (default: your login and your bot login),
+=delay= (default: =60= sec), =required_label_name= (default: =auto-merge=), ...
 
 - =gh_show_gitlab_ci_fail=
 Post comment with GitLab CI fail-report in PR's thread.\\
@@ -34,7 +34,11 @@ With [[./userscript/gitlab_delete_pipeline_button.user.js][userscript]] add dele
 ** Settings
 
 Settings stores in JSON file and environ variables. Path to settings file passes by first positional
-argument, default is =./hublabbot.json=.
+argument, default is =./hublabbot.json=. See more in [[https://potpourri1.gitlab.io/HubLabBot/settings.html#hublabbot.settings.HubLabBotSettings][HubLabBotSettings documentation]].
+
+** Releasing
+
+See [[./doc/RELEASING.org][RELEASING.org]].
 
 ** License
 

@@ -14,7 +14,7 @@ from hublabbot.util import set_frozen_attr, JsonDict
 
 @dataclass(frozen=True)
 class GithubAutoMergeOption:
-	"""Immutable record to `gh_auto_merge_pr` option.
+	r"""Immutable record to `gh_auto_merge_pr` option.
 
 	Attributes:
 		authors_white_list: List of authors whose PR can be auto-merged. Your login and your bot's
@@ -23,7 +23,7 @@ class GithubAutoMergeOption:
 		required_label_name: Name of label required for PR to be auto-merged. Default is `'auto-merge'`.
 		required_label_color: Label color in hex format. Default is `'#852576'`.
 		required_label_description: Label description.
-			Default is `'HubLabBot's "gh_auto_merge_pr" required label'`.
+			Default is `'HubLabBot\'s "gh_auto_merge_pr" required label'`.
 
 	"""
 
