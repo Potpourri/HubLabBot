@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -o errexit -o nounset -o pipefail
+
+main() {
+	local -r app=potpourri-bot
+	local -r procType=web
+
+	cd "${PROJECT_ROOT:?}/Potpourri-bot"
+
+	heroku container:login
+	heroku container:push --app="$app" "$procType"
+	heroku container:release --app="$app" "$procType"
+}
+
+main

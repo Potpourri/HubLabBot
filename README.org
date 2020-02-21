@@ -36,6 +36,10 @@ With [[./userscript/gitlab_delete_pipeline_button.user.js][userscript]] add dele
 Settings stores in JSON file and environ variables. Path to settings file passes by first positional
 argument, default is =./hublabbot.json=. See more in [[https://potpourri1.gitlab.io/HubLabBot/settings.html#hublabbot.settings.HubLabBotSettings][HubLabBotSettings documentation]].
 
+** Potpourri-bot
+
+My HubLabBot instance - [[./Potpourri-bot/][config]], [[https://github.com/Potpourri-bot][GitHub profile]], [[https://potpourri-bot.herokuapp.com/][Heroku instance]].
+
 ** Releasing
 
 See [[./doc/RELEASING.org][RELEASING.org]].
@@ -44,4 +48,4 @@ See [[./doc/RELEASING.org][RELEASING.org]].
 
 [[./LICENSE][MIT]]
 
-Except [[./hublabbot/assets/favicon.png][favicon.png]] from [[https://github.com/googlefonts/noto-emoji][Google Note Emoji]], their [[https://github.com/googlefonts/noto-emoji#license][license Apache 2.0]].
+Except [[./hublabbot/assets/favicon.png][favicon.png]] and [[./Potpourri-bot/avatar.png][avatar.png]] from [[https://github.com/googlefonts/noto-emoji][Google Note Emoji]], their [[https://github.com/googlefonts/noto-emoji#license][license Apache 2.0]].

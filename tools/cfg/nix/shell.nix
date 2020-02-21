@@ -42,6 +42,7 @@ stdenv.mkDerivation rec {
     # other developing tools:
     cacert #WORKAROUND: https://github.com/target/lorri/issues/98
     git
+    heroku
     conform
     update-pinned-nixpkgs
   ];
