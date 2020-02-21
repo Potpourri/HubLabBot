@@ -15,8 +15,16 @@
 
 		6. Build Docker image: =build-docker-img=.
 
-		7. Login to Docker Hub: =docker login --user=potpourri=.
+		7. Login to Docker Hub: =docker login --username potpourri=.
 
 		8. Deploy to Docker Hub: =deploy-to-docker-hub=.
 
 		9. Bump version in [[https://github.com/Potpourri/dotfiles/blob/master/nixos/nixpkgs/pkgs/hublabbot/default.nix][nix overlay]], then commit & push back.
+
+** Potpourri-bot
+
+		1. Release HubLabBot.
+
+		2. Update settings in [[../Potpourri-bot/hublabbot.json][hublabbot.json]] if needed.
+
+		3. Build and deploy to Heroku: =deploy-potpourri-bot=.

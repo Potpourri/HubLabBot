@@ -1,0 +1,15 @@
+{
+	"base_url": "https://potpourri-bot.herokuapp.com",
+	"repos": [
+		{
+			"gh_repo_path": "Potpourri/HubLabBot",
+			"gl_repo_path": "Potpourri1/HubLabBot",
+			"gl_auto_cancel_pipelines": true,
+			"gl_auto_delete_branches": true,
+			"gl_delete_pipeline_btn": true,
+			"gh_gitlab_ci_for_external_pr": true,
+			"gh_show_gitlab_ci_fail": {},
+			"gh_auto_merge_pr": {}
+		}
+	]
+}
