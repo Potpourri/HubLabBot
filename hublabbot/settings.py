@@ -81,7 +81,7 @@ class RepoOptions:
 		gh_show_gitlab_ci_fail: `GithubShowGitlabCIFailOption`: Post comment with GitLab CI fail-report
 			in PR's thread. If `None`, it is disabled.
 		gh_gitlab_ci_for_external_pr: Enable GitLab CI for external Pull Requests.
-		gl_auto_cancel_pipelines: Cancel all prevarious Pipelines with the same commit,
+		gl_auto_cancel_pipelines: Cancel all prevarious Pipelines with the same branch,
 			if started new one.
 		gl_auto_delete_branches: Delete branch in GitLab when she deleted in GitHub.
 		gl_delete_pipeline_btn: With [userscript](https://github.com/Potpourri/HubLabBot/blob/master/userscript/gitlab_delete_pipeline_button.user.js)

@@ -74,17 +74,28 @@ class GitlabWebhook:
 		project = self.gitlab.projects.get(self.repo_path, lazy=True)
 		pipeline_id = target_url.split('/')[-1]
 		pipeline = project.pipelines.get(pipeline_id)
-		pipeline_jobs = pipeline.jobs.list()
-		pipeline_jobs.sort(key=lambda j: j.id)
-		failed_pipeline_job = [j for j in pipeline_jobs if j.status == 'failed'][0]
-		failed_job = project.jobs.get(failed_pipeline_job.id)
+		# jobs sorted by running order
+		pipeline_jobs = pipeline.jobs.list(scope='failed')
+		failed_job = project.jobs.get(pipeline_jobs[0].id)
 		return failed_job
 
-	def cancel_old_pipelines(self, pipeline_tag: bool, pipeline_ref: str) -> IResponse:
+	def cancel_pipeline(self, pipeline_id: int) -> None:
+		"""Cancel one pipeline.
+
+		Args:
+			pipeline_id: ID of pipeline.
+
+		"""
+		project = self.gitlab.projects.get(self.repo_path, lazy=True)
+		pipeline = project.pipelines.get(pipeline_id)
+		pipeline.cancel()
+		print(f'GL:{self.repo_path}: Pipeline #{pipeline.id} canceled.')
+
+	def cancel_old_pipelines(self, pipeline_id: int, pipeline_ref: str) -> IResponse:
 		"""Action - auto-cancel old pipelines.
 
 		Args:
-			pipeline_tag: Pipeline run for tag or not.
+			pipeline_id: ID of pipeline, which triggered by pull request. If `0` save latest pipeline.
 			pipeline_ref: Branch name.
 
 		Returns:
@@ -93,18 +104,19 @@ class GitlabWebhook:
 			`{'status': 'ERROR', ...}` if action failed.
 
 		"""
-		# don't touch tag pipelines
-		if pipeline_tag:
-			return {'status': 'IGNORE'}
 		project = self.gitlab.projects.get(self.repo_path, lazy=True)
 		branch = project.branches.get(pipeline_ref)
 		# don't touch protected branch pipelines
 		if branch.protected:
 			return {'status': 'IGNORE'}
+		# pipelines sorted by ID by desc
 		pipelines = project.pipelines.list(ref=pipeline_ref, status='running')
 		pipelines += project.pipelines.list(ref=pipeline_ref, status='pending')
-		pipelines.sort(key=lambda pl: pl.id, reverse=True)
-		for pipeline in pipelines[1:]:
+		if pipeline_id == 0:
+			pipeline_id = pipelines[0].id
+		for pipeline in pipelines:
+			if pipeline.id == pipeline_id:
+				continue
 			pipeline.cancel()
 			print(f'GL:{self.repo_path}: Pipeline #{pipeline.id} canceled.')
 		return {'status': 'OK'}
