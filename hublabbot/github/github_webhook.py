@@ -45,23 +45,15 @@ class RemotePushCallback(pygit2.RemoteCallbacks):
 class GithubWebhook:
 	"""Main class with GitHub functionality."""
 
-	def __init__(self, settings: HubLabBotSettings, repo_path: str):
+	def __init__(self, settings: HubLabBotSettings, repo_path: str, is_admin: bool = False):
 		self.settings = settings
 		"""`hublabbot.settings.HubLabBotSettings`."""
 		self.repo_path = repo_path
 		"""Path like {namespace}/{repo name} in GitHub."""
 		self.repo_options = self.settings.get_repo_by_github(repo_path)
 		"""`hublabbot.settings.RepoOptions`."""
-		self.github_bot = Github(self.settings.gh_bot_token)
+		self.github = Github(self.settings.gh_token if is_admin else self.settings.gh_bot_token)
 		"""Github object with bot credentials."""
-
-	def _get_pr_by_sha(self, sha: str) -> Optional[ghp.PullRequest]:
-		repo = self.github_bot.get_repo(self.repo_path)
-		pr_list = [p for p in repo.get_pulls() if p.head.sha == sha]
-		if len(pr_list) == 0:
-			return None
-		else:
-			return pr_list[0]
 
 	def _merge_pr(self, pr: ghp.PullRequest) -> None:
 		status = pr.merge()
@@ -69,6 +61,38 @@ class GithubWebhook:
 			print(f'GH:{self.repo_path}: PR#{pr.number} merged.')
 		else:
 			raise RuntimeError(f'GH:{self.repo_path}: PR#{pr.number} fail to merge - "{status.message}"!')
+
+	def get_pr_by_sha(self, sha: str) -> Optional[ghp.PullRequest]:
+		"""Get PR by head commit sha.
+
+		Args:
+			sha: Head commit sha.
+
+		Returns:
+			PullRequest or `None` if not found.
+
+		"""
+		repo = self.github.get_repo(self.repo_path)
+		pr_list = [p for p in repo.get_pulls() if p.head.sha == sha]
+		if len(pr_list) == 0:
+			return None
+		else:
+			return pr_list[0]
+
+	def get_branch_head(self, branch_name: str) -> str:
+		"""Get head sha of `branch_name`.
+
+		Args:
+			branch_name: Branch name.
+
+		Returns:
+			Head commit sha.
+
+		"""
+		repo = self.github.get_repo(self.repo_path)
+		branch = repo.get_branch(branch_name)
+		head_sha: str = branch.commit.sha
+		return head_sha
 
 	def is_external_pr(self, pr: JsonDict) -> bool:
 		"""Check PR is external or not.
@@ -99,7 +123,7 @@ class GithubWebhook:
 			return {
 				'status': 'IGNORE',
 				'note': f'Repo option gh_auto_merge_pr disabled for repo {self.repo_path}.'}
-		pr = self._get_pr_by_sha(sha)
+		pr = self.get_pr_by_sha(sha)
 		if pr is None:
 			return {'status': 'IGNORE'}
 		if pr.state == 'closed' or pr.merged:
@@ -130,7 +154,7 @@ class GithubWebhook:
 			`{'status': 'ERROR', ...}` if action failed.
 
 		"""
-		pr = self._get_pr_by_sha(failed_job_sha)
+		pr = self.get_pr_by_sha(failed_job_sha)
 		if pr is None:
 			return {
 				'status': 'IGNORE',

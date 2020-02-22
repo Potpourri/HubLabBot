@@ -13,6 +13,7 @@ from pyramid.config import Configurator  # type: ignore
 
 from hublabbot.const import GITLAB_ENDPOINT, GITLAB_BUTTON_API_ENDPOINT
 from hublabbot.gitlab.gitlab_webhook import GitlabWebhook
+from hublabbot.github.github_webhook import GithubWebhook
 
 
 @view_defaults(
@@ -34,8 +35,12 @@ class GitlabPayloadView:
 		"""GitLab JSON payload."""
 		self.repo_path = self.payload['project']['path_with_namespace']
 		"""Path like {namespace}/{repo name} in GitLab."""
+		self.repo_options = self.settings.get_repo_by_gitlab(self.repo_path)
+		"""`hublabbot.settings.RepoOptions`."""
 		self.gitlab_wh = GitlabWebhook(self.settings, self.repo_path)
 		"""`hublabbot.gitlab.gitlab_webhook.GitlabWebhook` with your credentials."""
+		self.github_wh = GithubWebhook(self.settings, self.repo_options.gh_repo_path, is_admin=True)
+		"""`hublabbot.github.github_webhook.GithubWebhook` with your credentials."""
 
 	# jscpd:ignore-start
 	def _verify_request(self) -> None:
@@ -56,10 +61,17 @@ class GitlabPayloadView:
 
 		"""
 		pipeline = self.payload['object_attributes']
-		if pipeline['status'] == 'running':
-			return self.gitlab_wh.cancel_old_pipelines(pipeline['tag'], pipeline['ref'])
-		else:
-			return {'status': 'IGNORE'}
+		# don't touch tag pipelines
+		if pipeline['status'] in ('running', 'pending') and pipeline['tag'] is False:
+			branch_head = self.github_wh.get_branch_head(pipeline['ref'])
+			if self.github_wh.get_pr_by_sha(branch_head) is not None:
+				if pipeline['source'] == 'external_pull_request_event':
+					return self.gitlab_wh.cancel_old_pipelines(pipeline['id'], pipeline['ref'])
+				else:
+					self.gitlab_wh.cancel_pipeline(pipeline['id'])
+			else:
+				return self.gitlab_wh.cancel_old_pipelines(0, pipeline['ref'])
+		return {'status': 'IGNORE'}
 
 	# jscpd:ignore-start
 	@notfound_view_config()
