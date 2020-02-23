@@ -4,12 +4,17 @@ set -o errexit -o nounset -o pipefail
 main() {
 	local -r app=potpourri-bot
 	local -r procType=web
+	local -a args=(--app="$app" "$procType")
 
 	cd "${PROJECT_ROOT:?}/Potpourri-bot"
 
+	if [[ ${1:-} == --tag && -n ${2:-} ]]; then
+		args+=(--arg=HUBLABBOT_VERSION="$2")
+	fi
+
 	heroku container:login
-	heroku container:push --app="$app" "$procType"
+	heroku container:push "${args[@]}"
 	heroku container:release --app="$app" "$procType"
 }
 
-main
+main "$@"
