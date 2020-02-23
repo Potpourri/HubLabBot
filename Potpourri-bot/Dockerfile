@@ -1,4 +1,5 @@
-FROM potpourri/hublabbot
+ARG HUBLABBOT_VERSION=latest
+FROM potpourri/hublabbot:$HUBLABBOT_VERSION
 
 COPY hublabbot.json /opt/hublabbot/
 
