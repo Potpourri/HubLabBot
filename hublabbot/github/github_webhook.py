@@ -56,6 +56,12 @@ class GithubWebhook:
 		"""Github object with bot credentials."""
 
 	def _merge_pr(self, pr: ghp.PullRequest) -> None:
+		assert self.repo_options.gh_auto_merge_pr is not None
+		if pr.update() is True:
+			if pr.state == 'closed' or not pr.mergeable:
+				return
+			if self.repo_options.gh_auto_merge_pr.required_label_name not in [l.name for l in pr.labels]:
+				return
 		status = pr.merge()
 		if status.merged:
 			print(f'GH:{self.repo_path}: PR#{pr.number} merged.')
@@ -124,18 +130,17 @@ class GithubWebhook:
 				'status': 'IGNORE',
 				'note': f'Repo option gh_auto_merge_pr disabled for repo {self.repo_path}.'}
 		pr = self.get_pr_by_sha(sha)
-		if pr is None:
-			return {'status': 'IGNORE'}
-		if pr.state == 'closed' or pr.merged:
+		if pr is None or pr.state == 'closed' or not pr.mergeable:
 			return {'status': 'IGNORE'}
 		if pr.user.login not in self.repo_options.gh_auto_merge_pr.authors_white_list:
 			return {'status': 'IGNORE'}
 		if self.repo_options.gh_auto_merge_pr.required_label_name not in [l.name for l in pr.labels]:
 			return {'status': 'IGNORE'}
-		if not pr.mergeable:
-			return {'status': 'IGNORE'}
-		timer = Timer(self.repo_options.gh_auto_merge_pr.delay, lambda: self._merge_pr(pr))
-		timer.start()
+		if self.repo_options.gh_auto_merge_pr.delay > 0:
+			timer = Timer(self.repo_options.gh_auto_merge_pr.delay, lambda: self._merge_pr(pr))
+			timer.start()
+		else:
+			self._merge_pr(pr)
 		return {'status': 'OK'}
 
 	def show_gitlabci_fail(self, failed_job_sha: str, failed_stage: str, failed_job_url: str,
