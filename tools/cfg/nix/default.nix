@@ -2,7 +2,7 @@
 
 python37Packages.buildPythonPackage rec {
   pname = "hublabbot";
-  version = "0.0.1";
+  version = "0.0.2";
 
   src = ../../..;
 
