@@ -9,7 +9,9 @@
 			"gl_delete_pipeline_btn": true,
 			"gh_gitlab_ci_for_external_pr": true,
 			"gh_show_gitlab_ci_fail": {},
-			"gh_auto_merge_pr": {}
+			"gh_auto_merge_pr": {
+				"delay": 5
+			}
 		},
 		{
 			"gh_repo_path": "Potpourri/Hyperborea",
@@ -19,7 +21,9 @@
 			"gl_delete_pipeline_btn": true,
 			"gh_gitlab_ci_for_external_pr": true,
 			"gh_show_gitlab_ci_fail": {},
-			"gh_auto_merge_pr": {}
+			"gh_auto_merge_pr": {
+				"delay": 5
+			}
 		}
 	]
 }
