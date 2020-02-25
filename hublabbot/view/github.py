@@ -58,7 +58,13 @@ class GithubPayloadView:
 		if (self.payload['state'] == 'error'
 		    and self.payload['description'] == 'Pipeline canceled on GitLab'):
 			return {'status': 'IGNORE'}
-		failed_job = self.gitlab_wh.get_failed_job(self.payload['target_url'])
+		failed_pipeline = self.gitlab_wh.get_pipeline_by_url(self.payload['target_url'])
+		if failed_pipeline.yaml_errors is not None:
+			return self.github_bot_wh.show_gitlabci_fail(
+				failed_pipeline.sha, 'yaml_errors',
+				failed_pipeline.web_url, failed_pipeline.yaml_errors)
+		failed_job = self.gitlab_wh.get_failed_job(failed_pipeline)
+		assert failed_job is not None
 		failed_job_log = self.gitlab_wh.parse_gitlabci_log(failed_job.trace())
 		return self.github_bot_wh.show_gitlabci_fail(failed_job.pipeline['sha'], failed_job.stage,
 		                                             failed_job.web_url, failed_job_log)

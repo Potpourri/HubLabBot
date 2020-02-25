@@ -1,8 +1,10 @@
 """Module for GitLab webhook functionality."""
+from typing import Optional
 import re
 from datetime import datetime, timezone
 
 from gitlab import Gitlab, GitlabDeleteError  # type: ignore
+import gitlab.v4.objects as gl_types  # type: ignore
 from pyramid.interfaces import IResponse  # type: ignore
 
 from hublabbot.util import filter_out_ansi_escape
@@ -59,23 +61,36 @@ class GitlabWebhook:
 		log = '\n'.join(log_lines)
 		return log
 
-	def get_failed_job(self, target_url: str) -> IResponse:
-		"""Get failed job object from URL to pipeline.
+	def get_pipeline_by_url(self, target_url: str) -> gl_types.ProjectPipeline:
+		"""Get pipeline object from URL to pipeline.
 
 		Args:
 			target_url: URL to pipeline.
 
 		Returns:
-			`{'status': 'OK', ...}` if action was successful,</br>
-			`{'status': 'IGNORE', ...}` if action ignored,</br>
-			`{'status': 'ERROR', ...}` if action failed.
+			`ProjectPipeline` object.
 
 		"""
 		project = self.gitlab.projects.get(self.repo_path, lazy=True)
 		pipeline_id = target_url.split('/')[-1]
-		pipeline = project.pipelines.get(pipeline_id)
+		return project.pipelines.get(pipeline_id)
+
+	def get_failed_job(self, pipeline: gl_types.ProjectPipeline
+	) -> Optional[gl_types.ProjectPipelineJob]:
+		"""Get failed job object from `pipeline``.
+
+		Args:
+			pipeline: `ProjectPipeline` object.
+
+		Returns:
+			`ProjectPipelineJob` object or `None`.
+
+		"""
+		project = self.gitlab.projects.get(self.repo_path, lazy=True)
 		# jobs sorted by running order
 		pipeline_jobs = pipeline.jobs.list(scope='failed')
+		if len(pipeline_jobs) == 0:
+			return None
 		failed_job = project.jobs.get(pipeline_jobs[0].id)
 		return failed_job
 
