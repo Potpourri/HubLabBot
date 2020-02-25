@@ -11,30 +11,36 @@ commit-lint:
   script:
     - git fetch origin master:master --depth 50
     - commit-lint
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" || $CI_PIPELINE_SOURCE == "web"'
 
 style-lint:
   stage: code-lint
   interruptible: true
   script: style-lint
   rules:
-    - changes:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+      changes:
       - hublabbot/**/*.py
       - setup.{py,cfg}
       - tools/style-lint
       - tools/cfg/flake8-mypy.ini
       - tools/cfg/cspell.json
+    - if: '$CI_PIPELINE_SOURCE == "web"'
 
 static-analysis:
   stage: code-lint
   interruptible: true
   script: static-analysis
   rules:
-    - changes:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+      changes:
       - hublabbot/**/*.py
       - typeshed/**/*.pyi
       - setup.{py,cfg}
       - tools/static-analysis
       - tools/cfg/jscpd.json
+    - if: '$CI_PIPELINE_SOURCE == "web"'
 
 pages:
   stage: deploy-docs
