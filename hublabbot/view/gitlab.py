@@ -61,8 +61,10 @@ class GitlabPayloadView:
 
 		"""
 		pipeline = self.payload['object_attributes']
-		# don't touch tag pipelines
-		if pipeline['status'] in ('running', 'pending') and pipeline['tag'] is False:
+		# don't touch tag pipelines and manually launched pipelines
+		if (pipeline['status'] in ('running', 'pending')
+		    and pipeline['tag'] is False
+		    and pipeline['source'] != 'web'):
 			branch_head = self.github_wh.get_branch_head(pipeline['ref'])
 			if self.github_wh.get_pr_by_sha(branch_head) is not None:
 				if pipeline['source'] == 'external_pull_request_event':
